@@ -1,0 +1,295 @@
+
+:toc:
+
+= Hyperparameter Optimization: Getting the Most Out of Your Models
+Justin M. Wozniak <wozniak@mcs.anl.gov>
+
+== Overview
+
+In this example:
+
+* We are going to run a real CANDLE cancer Keras Benchmark.
+* We are going to optimize two of its hyperparameters (epochs and dense layer size) using Model-Based Optimization in R (mlrMBO)
+* We are going to run on a local machine or the LCRC Bebop cluster
+
+== Support
+
+If there are any questions or issues with these instructions, either:
+
+. File an issue at https://github.com/brettin/dl_tutorials/issues
+. Email wozniak@mcs.anl.gov
+
+For Swift/T issues, see here: http://swift-lang.github.io/swift-t/guide.html#support
+
+For EMEWS issues, see here: http://emews.github.io/support.html
+
+== Installation
+
+The notes below include modes for
+
+* Installing from source on your machine (does not require root)
+* Running from pre-installed software on LCRC Bebop
+
+In advance of the tutorial, either:
+
+* From source: Install R and mlrMBO as shown below, as this installation takes significant compilation time
+* On Bebop: Check that your Bebop account is still working
+
+=== Install R
+
+==== From source
+
+----
+$ wget https://cran.r-project.org/src/base/R-3/R-3.4.3.tar.gz
+$ ./configure --prefix=$HOME/R-3.4.3 --without-ICU --enable-R-shlib
+$ make -j 4
+$ make install
+----
+
+Put R in your PATH and record your R installation location for use below.
+
+==== On Bebop
+
+Add to PATH:
+
+----
+/home/wozniak/Public/sfw/bebop/R-3.4.3/bin
+----
+
+=== Install the hyperparameter optimizer (mlrMBO)
+
+==== On Bebop
+
+This is already installed.
+
+==== From source
+
+----
+$ Topics/5_hyperparam_opt/install-candle.sh
+----
+
+This step can take under 10 minutes on a fast machine, but on a slower machine or VM, it can take up to 2 hours.
+
+=== Install EQ/R
+
+==== On Bebop
+
+Simply edit workflow.sh to change BEBOP=0 to BEBOP=1
+
+==== From source
+
+----
+$ cd EQ-R/eqr
+$ cp settings.template.sh settings.sh
+# edit settings.sh to set R_HOME, Tcl settings
+$ source settings.sh
+$ ./bootstrap
+$ ./configure --prefix=$PWD/..
+$ make -j 2
+$ make install
+----
+
+=== Install Swift/T
+
+==== On Bebop
+
+This is already installed.  Add to PATH:
+
+----
+/soft/jdk/1.8.0_51/bin
+/home/wozniak/Public/sfw/bebop/compute/swift-t-dl/stc/bin
+----
+
+* Run 'nice swift-t' to run on the login node.
+* Run 'swift-t -m slurm' to run on the compute nodes.
+
+==== From source
+
+First, install MPICH:
+----
+$ sudo apt-get install mpich
+----
+
+Or install from source:
+
+----
+$ wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz
+$ tar xfz mpich-3.2.1.tar.gz
+$ ./configure --prefix=...
+$ make -j 4
+$ make install
+----
+
+Install Swift/T using the release package here:
+
+* http://swift-lang.github.io/swift-t-downloads/1.3/swift-t-1.3.tar.gz
+* http://swift-lang.github.io/swift-t/downloads.html
+
+----
+$ wget http://swift-lang.github.io/swift-t-downloads/1.3/swift-t-1.3.tar.gz
+$ tar xfz swift-t-1.3.tar.gz
+$ cd swift-t-1.3
+$ dev/build/init-settings.sh
+----
+
+Then, edit dev/build/swift-t-settings.sh .
+. Set SWIFT_T_PREFIX to any desired installation location
+. Set ENABLE_R=1
+. Set R_INSTALL to your R installation
+
+Then:
+
+----
+$ dev/build/build-all.sh
+----
+
+If the build is successful, you will see a final message BUILD SUCCESSFUL from Ant.
+
+Then, add the reported stc/bin directory to your PATH.  This contains the executable program *swift-t* .
+
+==== Test Swift/T
+
+You can test the Swift/T installation by running:
+
+----
+$ swift-t -E 'trace(42);'
+trace: 42
+----
+
+== Install the Benchmark
+
+This is a cancer benchmark.
+
+=== Get the source code
+
+----
+$ git clone https://github.com/ECP-CANDLE/Benchmarks.git
+$ cd Benchmarks
+$ git checkout frameworks
+----
+
+Note where the Benchmarks are installed
+
+----
+BENCHMARKS=$PWD/Benchmarks
+----
+
+== Test the benchmark
+
+Run this to test the benchmark by itself (no hyperparameter search), and look for the given output.
+
+----
+$ cd $BENCHMARKS/Pilot1/NT3
+# Check you are using the right python executable, then:
+$ nice python nt3_baseline_keras2.py
+Using TensorFlow backend.
+...
+Params: { ...
+----
+
+=== On Bebop
+
+Add this Anaconda installation to your PATH:
+
+----
+/home/wozniak/Public/sfw/anaconda3/bin
+----
+
+Run the python command above on the login node (under nice!) until the data has been downloaded, then kill it when TensorFlow starts (Ctrl-C).  Then, submit to the compute as shown below.
+
+== Run the optimization workflow
+
+. Edit model.sh to set PYTHONPATH to your Benchmarks location
+. Edit workflow.sh to set the R variable to your R installation
+
+Then, run:
+
+----
+$ ./workflow.sh X01
+----
+
+where X01 is a name you give the the experiment run.
+
+This will run for a long time.  Press Ctrl-C to cancel.
+
+=== On Bebop
+
+Edit model.sh to uncomment the anaconda3 PATH entry
+
+Swift/T will report a job number (JOB_ID) and output directory (TURBINE_OUTPUT).  Use 'squeue -u $USER' to determine when the job starts, at which point you can start viewing output in output.txt .
+
+=== Shrink the data
+
+This script will back up your original data and create smaller data files.
+
+----
+$ ./data-shrink.sh $BENCHMARKS/Data/Pilot1
+----
+
+Then, run the workflow again.  Training with the smaller data sets should complete in a matter of seconds on a fast system.
+
+== File index
+
+In order of execution:
+
+workflow.sh::
+The main user entry point.  Sets up the environment and arguments, invokes swift-t
+
+workflow.swift::
+The swift-t system runs this program.  swift-t starts up the MPI environment (either local mpiexec or SLURM, etc.)  Then, it runs this workflow, which starts mlrMBO via EMEWS and passes sample hyperparameters from mlrMBO to Keras, and returns results to mlrMBO
+
+EQ-R::
+Directory containing the EMEWS Queues for R installation
+
+mlrMBO3.R::
+Wrapper around mlrMBO.  Communicates with Swift/T over EMEWS.
+
+data/params.R::
+The definition of the search space to be used by mlrMBO.  In this example, we simply try varying the number of training epochs and number of neurons in the dense network
+
+model.sh::
+Invoked by Swift/T with PARAMS, a JSON-encoded hyperparameter sample.  Sets up environment and calls python on the model runner
+
+model_runner.py::
+Abstraction wrapper around the Benchmark.  Invokes the Benchmark with the given model_name
+
+Benchmarks/nt3_baseline_keras2.py::
+The actual cancer Benchmark, using Keras.  Trains the NN and returns the validation loss
+
+== Extending this example
+
+=== Modify mlrMBO settings
+
+This is simply a matter of extending params.R and handling the extra generated parameters in model.sh
+
+=== Change the neural network used
+
+This is a matter of changing model.sh .  This shell script can be modified to invoke any program, Python-based or otherwise.  Simply pass PARAMS to your NN.
+
+=== Use a different optimizer
+
+CANDLE has developed other workflows that use other optimizers (DEAP, Hyperopt, etc.)  Connect with us to try these workflows, or see https://emews.github.io to develop your own workflow!
+
+== Systems with MPICH and OpenMPI
+
+This may result in conflicts.  After installing MPICH, do:
+
+----
+$ sudo update-alternatives --set mpi /usr/include/mpich
+----
+
+Then, in swift-t-settings.sh set:
+
+----
+MPI_LIB_DIR=/usr/lib/mpich/lib
+----
+
+and in dev/build/turbine-build.sh, set:
+
+----
+EXTRA_ARGS=--with-launcher=/usr/bin/mpiexec.mpich
+----
+
+== Acknowledgments
+
+Thanks to Jonathan Ozik and Rajeev Jain for providing feedback on this tutorial.
