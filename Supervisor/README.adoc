@@ -32,11 +32,11 @@ The notes below include modes for
 
 In advance of the tutorial, either:
 
-* From source: Install R and mlrMBO as shown below, as this installation takes significant compilation time
+* From source: Install Anaconda, R, and mlrMBO as shown below, as this installation takes significant compilation time
 * On Bebop: Check that your Bebop account is still working
 
-* Install Anaconda:
-+
+=== Install Anaconda:
+
 ----
 $ wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
 # Make the installer executable
@@ -49,8 +49,9 @@ $ source ~/.bashrc
 # Or you can manually update your path
 $ export PATH=$HOME/anaconda3/bin:$PATH
 ----
-* Install additonal modules not shipped with Anaconda
-+
+
+Install/update additonal modules not shipped with Anaconda
+
 ----
 $ conda install -c conda-forge tensorflow
 $ conda update -c anaconda pandas
