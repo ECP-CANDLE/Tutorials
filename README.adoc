@@ -3,6 +3,8 @@
 
 At ECP 2018.
 
+Follow the setup below to install the necessary software for the CANDLE Benchmark, then proceed to Supervisor/README.adoc to install the CANDLE Supervisor.
+
 == Setup
 
 ===  Linux
