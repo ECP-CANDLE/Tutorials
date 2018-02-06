@@ -58,7 +58,7 @@ LOG_FILE=$INSTANCE_DIRECTORY/model.log
 cd $INSTANCE_DIRECTORY
 
 # USER: Set the location of your Benchmarks
-export PYTHONPATH=$HOME/proj/Benchmarks/Pilot1/NT3
+export PYTHONPATH=$HOME/proj/Benchmarks/Pilot3/P3B1:${PYTHONPATH:-}
 
 # USER: If on Bebop, uncomment this:
 # PATH=/home/wozniak/Public/sfw/anaconda3/bin:$PATH
