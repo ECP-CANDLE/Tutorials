@@ -1,7 +1,7 @@
 
 :toc:
 
-= Hyperparameter Optimization: Getting the Most Out of Your Models
+= Hyperparameter Optimization
 Justin M. Wozniak <wozniak@mcs.anl.gov>
 
 == Overview
@@ -10,13 +10,13 @@ In this example:
 
 * We are going to run a real CANDLE cancer Keras Benchmark.
 * We are going to optimize two of its hyperparameters (epochs and dense layer size) using Model-Based Optimization in R (mlrMBO)
-* We are going to run on a local machine or the LCRC Bebop cluster
+* We are going to run on a local machine
 
 == Support
 
 If there are any questions or issues with these instructions, either:
 
-. File an issue at https://github.com/brettin/dl_tutorials/issues
+. File an issue at https://github.com/ECP-CANDLE/Tutorials/issues
 . Email wozniak@mcs.anl.gov
 
 For Swift/T issues, see here: http://swift-lang.github.io/swift-t/guide.html#support
@@ -28,36 +28,10 @@ For EMEWS issues, see here: http://emews.github.io/support.html
 The notes below include modes for
 
 * Installing from source on your machine (does not require root)
-* Running from pre-installed software on LCRC Bebop
 
 In advance of the tutorial, either:
 
-* From source: Install Anaconda, R, and mlrMBO as shown below, as this installation takes significant compilation time
-* On Bebop: Check that your Bebop account is still working
-
-=== Install Anaconda:
-
-----
-$ wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
-# Make the installer executable
-$ chmod u+x ./Anaconda3-5.0.1-Linux-x86_64.sh
-# Run the installer, accepting the defaults.
-$ ./Anaconda3-5.0.1-Linux-x86_64.sh
-# Source the relevant bash file to add anaconda3/bin to your path
-$ source ~/.bash_profile
-$ source ~/.bashrc
-# Or you can manually update your path
-$ export PATH=$HOME/anaconda3/bin:$PATH
-----
-
-Install/update additonal modules not shipped with Anaconda
-
-----
-$ conda install -c conda-forge tensorflow
-$ conda update -c anaconda pandas
-$ conda install hdf5
-$ pip install git+git://github.com/fchollet/keras.git
-----
+* From source: Install Anaconda, R, and mlrMBO, as shown here, as this installation takes significant compilation time
 
 === Install R
 
@@ -82,25 +56,13 @@ Add to PATH:
 
 === Install the hyperparameter optimizer (mlrMBO)
 
-==== On Bebop
-
-This is already installed.
-
-==== From source
-
 ----
-$ Topics/5_hyperparam_opt/install-candle.sh
+$ Supervisor/install-candle.sh
 ----
 
 This step can take under 10 minutes on a fast machine, but on a slower machine or VM, it can take up to 2 hours.
 
 === Install EQ/R
-
-==== On Bebop
-
-Simply edit workflow.sh to change BEBOP=0 to BEBOP=1
-
-==== From source
 
 ----
 $ cd EQ-R/eqr
@@ -114,20 +76,6 @@ $ make install
 ----
 
 === Install Swift/T
-
-==== On Bebop
-
-This is already installed.  Add to PATH:
-
-----
-/soft/jdk/1.8.0_51/bin
-/home/wozniak/Public/sfw/bebop/compute/swift-t-dl/stc/bin
-----
-
-* Run 'nice swift-t' to run on the login node.
-* Run 'swift-t -m slurm' to run on the compute nodes.
-
-==== From source
 
 First, install MPICH:
 ----
@@ -211,15 +159,7 @@ Using TensorFlow backend.
 Params: { ...
 ----
 
-=== On Bebop
-
-Add this Anaconda installation to your PATH:
-
-----
-/home/wozniak/Public/sfw/anaconda3/bin
-----
-
-Run the python command above on the login node (under nice!) until the data has been downloaded, then kill it when TensorFlow starts (Ctrl-C).  Then, submit to the compute as shown below.
+Run the python command above until the data has been downloaded, then kill it when TensorFlow starts (Ctrl-C).  Then, you can run the Supervisor.
 
 == Run the optimization workflow
 
@@ -235,12 +175,6 @@ $ ./workflow.sh X01
 where X01 is a name you give the the experiment run.
 
 This will run for a long time.  Press Ctrl-C to cancel.
-
-=== On Bebop
-
-Edit model.sh to uncomment the anaconda3 PATH entry
-
-Swift/T will report a job number (JOB_ID) and output directory (TURBINE_OUTPUT).  Use 'squeue -u $USER' to determine when the job starts, at which point you can start viewing output in output.txt .
 
 === Shrink the data
 
