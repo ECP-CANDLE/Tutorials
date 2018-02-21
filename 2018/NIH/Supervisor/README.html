@@ -1,0 +1,1187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
+<title>Hyperparameter Optimization: Getting the Most Out of Your Models</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(2);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>Hyperparameter Optimization: Getting the Most Out of Your Models</h1>
+<span id="author">Justin M. Wozniak</span><br />
+<span id="email"><code>&lt;<a href="mailto:wozniak@mcs.anl.gov">wozniak@mcs.anl.gov</a>&gt;</code></span><br />
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_overview">Overview</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In this example:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+We are going to run a real CANDLE cancer Keras Benchmark.
+</p>
+</li>
+<li>
+<p>
+We are going to optimize two of its hyperparameters (epochs and dense layer size) using Model-Based Optimization in R (mlrMBO)
+</p>
+</li>
+<li>
+<p>
+We are going to run on a local machine or the LCRC Bebop cluster
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_support">Support</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>If there are any questions or issues with these instructions, either:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+File an issue at <a href="https://github.com/brettin/dl_tutorials/issues">https://github.com/brettin/dl_tutorials/issues</a>
+</p>
+</li>
+<li>
+<p>
+Email <a href="mailto:wozniak@mcs.anl.gov">wozniak@mcs.anl.gov</a>
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>For Swift/T issues, see here: <a href="http://swift-lang.github.io/swift-t/guide.html#support">http://swift-lang.github.io/swift-t/guide.html#support</a></p></div>
+<div class="paragraph"><p>For EMEWS issues, see here: <a href="http://emews.github.io/support.html">http://emews.github.io/support.html</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation">Installation</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The notes below include modes for</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Installing from source on your machine (does not require root)
+</p>
+</li>
+<li>
+<p>
+Running from pre-installed software on LCRC Bebop
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>In advance of the tutorial, either:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+From source: Install Anaconda, R, and mlrMBO as shown below, as this installation takes significant compilation time
+</p>
+</li>
+<li>
+<p>
+On Bebop: Check that your Bebop account is still working
+</p>
+</li>
+</ul></div>
+<div class="sect2">
+<h3 id="_install_anaconda">Install Anaconda:</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
+# Make the installer executable
+$ chmod u+x ./Anaconda3-5.0.1-Linux-x86_64.sh
+# Run the installer, accepting the defaults.
+$ ./Anaconda3-5.0.1-Linux-x86_64.sh
+# Source the relevant bash file to add anaconda3/bin to your path
+$ source ~/.bash_profile
+$ source ~/.bashrc
+# Or you can manually update your path
+$ export PATH=$HOME/anaconda3/bin:$PATH</code></pre>
+</div></div>
+<div class="paragraph"><p>Install/update additonal modules not shipped with Anaconda</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ conda install -c conda-forge tensorflow
+$ conda update -c anaconda pandas
+$ conda install hdf5
+$ pip install git+git://github.com/fchollet/keras.git</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_install_r">Install R</h3>
+<div class="sect3">
+<h4 id="_from_source">From source</h4>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ wget https://cran.r-project.org/src/base/R-3/R-3.4.3.tar.gz
+$ ./configure --prefix=$HOME/R-3.4.3 --without-ICU --enable-R-shlib
+$ make -j 4
+$ make install</code></pre>
+</div></div>
+<div class="paragraph"><p>Put R in your PATH and record your R installation location for use below.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_on_bebop">On Bebop</h4>
+<div class="paragraph"><p>Add to PATH:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>/home/wozniak/Public/sfw/bebop/R-3.4.3/bin</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_the_hyperparameter_optimizer_mlrmbo">Install the hyperparameter optimizer (mlrMBO)</h3>
+<div class="sect3">
+<h4 id="_on_bebop_2">On Bebop</h4>
+<div class="paragraph"><p>This is already installed.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_from_source_2">From source</h4>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ Topics/5_hyperparam_opt/install-candle.sh</code></pre>
+</div></div>
+<div class="paragraph"><p>This step can take under 10 minutes on a fast machine, but on a slower machine or VM, it can take up to 2 hours.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_eq_r">Install EQ/R</h3>
+<div class="sect3">
+<h4 id="_on_bebop_3">On Bebop</h4>
+<div class="paragraph"><p>Simply edit workflow.sh to change BEBOP=0 to BEBOP=1</p></div>
+</div>
+<div class="sect3">
+<h4 id="_from_source_3">From source</h4>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ cd EQ-R/eqr
+$ cp settings.template.sh settings.sh
+# edit settings.sh to set R_HOME, Tcl settings
+$ source settings.sh
+$ ./bootstrap
+$ ./configure --prefix=$PWD/..
+$ make -j 2
+$ make install</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_swift_t">Install Swift/T</h3>
+<div class="sect3">
+<h4 id="_on_bebop_4">On Bebop</h4>
+<div class="paragraph"><p>This is already installed.  Add to PATH:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>/soft/jdk/1.8.0_51/bin
+/home/wozniak/Public/sfw/bebop/compute/swift-t-dl/stc/bin</code></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Run <em>nice swift-t</em> to run on the login node.
+</p>
+</li>
+<li>
+<p>
+Run <em>swift-t -m slurm</em> to run on the compute nodes.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_from_source_4">From source</h4>
+<div class="paragraph"><p>First, install MPICH:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ sudo apt-get install mpich</code></pre>
+</div></div>
+<div class="paragraph"><p>Or install from source:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz
+$ tar xfz mpich-3.2.1.tar.gz
+$ ./configure --prefix=...
+$ make -j 4
+$ make install</code></pre>
+</div></div>
+<div class="paragraph"><p>Install Swift/T using the release package here:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://swift-lang.github.io/swift-t-downloads/1.3/swift-t-1.3.tar.gz">http://swift-lang.github.io/swift-t-downloads/1.3/swift-t-1.3.tar.gz</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://swift-lang.github.io/swift-t/downloads.html">http://swift-lang.github.io/swift-t/downloads.html</a>
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ wget http://swift-lang.github.io/swift-t-downloads/1.3/swift-t-1.3.tar.gz
+$ tar xfz swift-t-1.3.tar.gz
+$ cd swift-t-1.3
+$ dev/build/init-settings.sh</code></pre>
+</div></div>
+<div class="paragraph"><p>Then, edit dev/build/swift-t-settings.sh .
+. Set SWIFT_T_PREFIX to any desired installation location
+. Set ENABLE_R=1
+. Set R_INSTALL to your R installation</p></div>
+<div class="paragraph"><p>Then:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ dev/build/build-all.sh</code></pre>
+</div></div>
+<div class="paragraph"><p>If the build is successful, you will see a final message BUILD SUCCESSFUL from Ant.</p></div>
+<div class="paragraph"><p>Then, add the reported stc/bin directory to your PATH.  This contains the executable program <strong>swift-t</strong> .</p></div>
+</div>
+<div class="sect3">
+<h4 id="_test_swift_t">Test Swift/T</h4>
+<div class="paragraph"><p>You can test the Swift/T installation by running:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ swift-t -E 'trace(42);'
+trace: 42</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_install_the_benchmark">Install the Benchmark</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This is a cancer benchmark.</p></div>
+<div class="sect2">
+<h3 id="_get_the_source_code">Get the source code</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ git clone https://github.com/ECP-CANDLE/Benchmarks.git
+$ cd Benchmarks
+$ git checkout frameworks</code></pre>
+</div></div>
+<div class="paragraph"><p>Note where the Benchmarks are installed</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>BENCHMARKS=$PWD/Benchmarks</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_the_benchmark">Test the benchmark</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Run this to test the benchmark by itself (no hyperparameter search), and look for the given output.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ cd $BENCHMARKS/Pilot1/NT3
+# Check you are using the right python executable, then:
+$ nice python nt3_baseline_keras2.py
+Using TensorFlow backend.
+...
+Params: { ...</code></pre>
+</div></div>
+<div class="sect2">
+<h3 id="_on_bebop_5">On Bebop</h3>
+<div class="paragraph"><p>Add this Anaconda installation to your PATH:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>/home/wozniak/Public/sfw/anaconda3/bin</code></pre>
+</div></div>
+<div class="paragraph"><p>Run the python command above on the login node (under nice!) until the data has been downloaded, then kill it when TensorFlow starts (Ctrl-C).  Then, submit to the compute as shown below.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_the_optimization_workflow">Run the optimization workflow</h2>
+<div class="sectionbody">
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Edit model.sh to set PYTHONPATH to your Benchmarks location
+</p>
+</li>
+<li>
+<p>
+Edit workflow.sh to set the R variable to your R installation
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Then, run:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ ./workflow.sh X01</code></pre>
+</div></div>
+<div class="paragraph"><p>where X01 is a name you give the the experiment run.</p></div>
+<div class="paragraph"><p>This will run for a long time.  Press Ctrl-C to cancel.</p></div>
+<div class="sect2">
+<h3 id="_on_bebop_6">On Bebop</h3>
+<div class="paragraph"><p>Edit model.sh to uncomment the anaconda3 PATH entry</p></div>
+<div class="paragraph"><p>Swift/T will report a job number (JOB_ID) and output directory (TURBINE_OUTPUT).  Use <em>squeue -u $USER</em> to determine when the job starts, at which point you can start viewing output in output.txt .</p></div>
+</div>
+<div class="sect2">
+<h3 id="_shrink_the_data">Shrink the data</h3>
+<div class="paragraph"><p>This script will back up your original data and create smaller data files.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ ./data-shrink.sh $BENCHMARKS/Data/Pilot1</code></pre>
+</div></div>
+<div class="paragraph"><p>Then, run the workflow again.  Training with the smaller data sets should complete in a matter of seconds on a fast system.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_file_index">File index</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In order of execution:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+workflow.sh
+</dt>
+<dd>
+<p>
+The main user entry point.  Sets up the environment and arguments, invokes swift-t
+</p>
+</dd>
+<dt class="hdlist1">
+workflow.swift
+</dt>
+<dd>
+<p>
+The swift-t system runs this program.  swift-t starts up the MPI environment (either local mpiexec or SLURM, etc.)  Then, it runs this workflow, which starts mlrMBO via EMEWS and passes sample hyperparameters from mlrMBO to Keras, and returns results to mlrMBO
+</p>
+</dd>
+<dt class="hdlist1">
+EQ-R
+</dt>
+<dd>
+<p>
+Directory containing the EMEWS Queues for R installation
+</p>
+</dd>
+<dt class="hdlist1">
+mlrMBO3.R
+</dt>
+<dd>
+<p>
+Wrapper around mlrMBO.  Communicates with Swift/T over EMEWS.
+</p>
+</dd>
+<dt class="hdlist1">
+data/params.R
+</dt>
+<dd>
+<p>
+The definition of the search space to be used by mlrMBO.  In this example, we simply try varying the number of training epochs and number of neurons in the dense network
+</p>
+</dd>
+<dt class="hdlist1">
+model.sh
+</dt>
+<dd>
+<p>
+Invoked by Swift/T with PARAMS, a JSON-encoded hyperparameter sample.  Sets up environment and calls python on the model runner
+</p>
+</dd>
+<dt class="hdlist1">
+model_runner.py
+</dt>
+<dd>
+<p>
+Abstraction wrapper around the Benchmark.  Invokes the Benchmark with the given model_name
+</p>
+</dd>
+<dt class="hdlist1">
+Benchmarks/nt3_baseline_keras2.py
+</dt>
+<dd>
+<p>
+The actual cancer Benchmark, using Keras.  Trains the NN and returns the validation loss
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_extending_this_example">Extending this example</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_modify_mlrmbo_settings">Modify mlrMBO settings</h3>
+<div class="paragraph"><p>This is simply a matter of extending params.R and handling the extra generated parameters in model.sh</p></div>
+</div>
+<div class="sect2">
+<h3 id="_change_the_neural_network_used">Change the neural network used</h3>
+<div class="paragraph"><p>This is a matter of changing model.sh .  This shell script can be modified to invoke any program, Python-based or otherwise.  Simply pass PARAMS to your NN.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_use_a_different_optimizer">Use a different optimizer</h3>
+<div class="paragraph"><p>CANDLE has developed other workflows that use other optimizers (DEAP, Hyperopt, etc.)  Connect with us to try these workflows, or see <a href="https://emews.github.io">https://emews.github.io</a> to develop your own workflow!</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_systems_with_mpich_and_openmpi">Systems with MPICH and OpenMPI</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This may result in conflicts.  After installing MPICH, do:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$ sudo update-alternatives --set mpi /usr/include/mpich</code></pre>
+</div></div>
+<div class="paragraph"><p>Then, in swift-t-settings.sh set:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>MPI_LIB_DIR=/usr/lib/mpich/lib</code></pre>
+</div></div>
+<div class="paragraph"><p>and in dev/build/turbine-build.sh, set:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>EXTRA_ARGS=--with-launcher=/usr/bin/mpiexec.mpich</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_acknowledgments">Acknowledgments</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Thanks to Jonathan Ozik and Rajeev Jain for providing feedback on this tutorial.</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2018-01-31 11:51:22 CST
+</div>
+</div>
+</body>
+</html>
