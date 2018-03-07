@@ -71,8 +71,9 @@ def run(hyper_parameter_map, obj_param):
     runner_utils.keras_clear_session(framework)
 
     # use the last validation_loss as the value to minimize
-    val_loss = history.history['val_loss']
-    result = val_loss[-1]
+    # val_loss = history.history['val_loss']
+    # result = val_loss[-1]
+    result = history
     print("result: ", result)
     return result
 
