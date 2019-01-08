@@ -1,0 +1,24 @@
+
+= CANDLE Tutorial
+
+At ECP 2019.
+
+== Agenda
+
+Abstract: CANDLE (CANcer Distributed Learning Environment) is an environment designed for scalable execution of deep neural network codes. Developed initially to address three top challenges facing the cancer community, CANDLE increasingly can be used to tackle deep learning problems of other application areas. This workshop will provide a forum for hands-on tutorials on preparing a deep neural network to run in CANDLE, hyperparameter optimization, model ensembles for uncertainty quantification (UQ), and data parallelism.
+
+----
+9:00 a.m. Tom Brettin Set-up and Orientation, Overview of day (30 min)
+9:30 a.m. Arvind Ramanathan Motivating examples (30 min) 
+10:30 a.m. Jamal Mohd-Yusof CANDLE libs (30 min) 
+11:00 a.m. Harry Yoo Migrating to CANDLE (45 min) 
+11:45 a.m. Lunch break (45 min)
+1:30 p.m. Justin Wozniak Hyperparameter Optimization: Overview and examples (60 min)
+2:30 p.m. Harry Yoo Model Ensembles for UQ: Overview and examples (60 min)
+3:30 p.m. Justin Wozniak Data Parallelism: Overview and examples (60 min)
+4:30 p.m. Study hall, viz, requirements, feedbacks (60 min)
+5:30 p.m. Scheduled end
+----
+
+== Setup
+
