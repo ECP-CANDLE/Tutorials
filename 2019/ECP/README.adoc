@@ -12,7 +12,7 @@ Abstract: CANDLE (CANcer Distributed Learning Environment) is an environment des
 9:30 a.m. Arvind Ramanathan Motivating examples (30 min) 
 10:30 a.m. Jamal Mohd-Yusof CANDLE libs (30 min) 
 11:00 a.m. Harry Yoo Migrating to CANDLE (45 min) 
-11:45 a.m. Lunch break (45 min)
+11:45 a.m. Lunch break (1hr 45 min)
 1:30 p.m. Justin Wozniak Hyperparameter Optimization: Overview and examples (60 min)
 2:30 p.m. Harry Yoo Model Ensembles for UQ: Overview and examples (60 min)
 3:30 p.m. Justin Wozniak Data Parallelism: Overview and examples (60 min)
