@@ -63,19 +63,14 @@ conda install graphviz
 pip   install pydot
 
 # Download the source files for the tutorial
-git clone https://github.com/ECP-CANDLE/Tutorials
+git clone https://github.com/ECP-CANDLE/Candle.git
 
 # Run a quick test
-cd candle_tutorials
 which python
 python setup.test
 
-# # Run the DNN that we'll migrate to CANDLE
-# cd Topics/1_migrating_your_DNN_to_candle
-# curl -o rip.it.test.csv.gz ftp://ftp.mcs.anl.gov/pub/candle/public/tutorials/t29res/rip.it.test.csv.gz
-# curl -o rip.it.train.csv.gz ftp://ftp.mcs.anl.gov/pub/candle/public/tutorials/t29res/rip.it.train.csv.gz
-# gunzip rip.it.test.csv.gz
-# gunzip rip.it.train.csv.gz
-
-# python ./t29res.py
+# Run mnist example
+cd Candle/examples/mnist
+python mnist_mlp.py
+cd -
 ----
