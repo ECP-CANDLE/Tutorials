@@ -70,6 +70,8 @@ export PATH=/$HOME/anaconda3/bin:$PATH
 # Create a candle enviornment and activate it
 conda create -n candle python=3.6
 conda activate candle
+# or
+source activate candle
 
 # Install additonal modules not shipped with Anaconda
 conda install tensorflow
