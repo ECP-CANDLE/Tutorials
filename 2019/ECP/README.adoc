@@ -22,14 +22,14 @@ Abstract: CANDLE (CANcer Distributed Learning Environment) is an environment des
 
 == Setup
 
+=== Install Anaconda for Linux
 ----
 # 
 # Set up your python environment
 # ------------------------------
 
 # Download the Anaconda installer
-curl -o Anaconda3-5.3.0-Linux-x86_64.sh https://repo.anaconda.com/archive/Anacon
-da3-5.3.0-Linux-x86_64.sh
+curl -o Anaconda3-5.3.0-Linux-x86_64.sh https://repo.anaconda.com/archive/Anaconda3-5.3.0-Linux-x86_64.sh
 # Make the installer executable
 chmod u+x ./Anaconda3-5.3.0-Linux-x86_64.sh
 
@@ -45,7 +45,28 @@ source ~/.bashrc
 
 # Or you can manually update your path
 export PATH=$HOME/anaconda3/bin:$PATH
+----
 
+=== Install Anaconda for Mac
+----
+# Download the Anaconda installer
+curl -o Anaconda3-5.0.1-MacOSX-x86_64.sh https://repo.continuum.io/archive/Anaconda3-5.0.1-MacOSX-x86_64.sh
+
+# Make the installer executable
+chmod u+x ./Anaconda3-5.0.1-MacOSX-x86_64.sh
+
+# Run the installer, accepting the defaults.
+./Anaconda3-5.0.1-MacOSX-x86_64.sh
+
+# Source the .bash_profile to add anaconda3/bin to your path
+source ~/.bash_profile
+
+# Or you can manually update your path
+export PATH=/$HOME/anaconda3/bin:$PATH
+----
+
+=== Create conda environment and install dependencies
+----
 # Create a candle enviornment and activate it
 conda create -n candle python=3.6
 conda activate candle
