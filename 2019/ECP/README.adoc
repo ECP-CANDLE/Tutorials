@@ -63,7 +63,7 @@ conda install graphviz
 pip   install pydot
 
 # Download the source files for the tutorial
-git clone https://github.com/brettin/candle_tutorials
+git clone https://github.com/ECP-CANDLE/Tutorials
 
 # Run a quick test
 cd candle_tutorials
