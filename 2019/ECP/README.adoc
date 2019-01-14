@@ -50,7 +50,7 @@ export PATH=$HOME/anaconda3/bin:$PATH
 conda create -n candle python=3.6
 conda activate candle
 
-# Install an additonal module not shipped with Anaconda
+# Install additonal modules not shipped with Anaconda
 conda install tensorflow
 conda install pandas
 conda install keras
