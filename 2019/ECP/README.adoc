@@ -23,6 +23,7 @@ Abstract: CANDLE (CANcer Distributed Learning Environment) is an environment des
 == Setup
 
 ----
+# 
 # Set up your python environment
 # ------------------------------
 
@@ -59,6 +60,7 @@ conda install opencv
 conda install tqdm
 conda install matplotlib
 conda install graphviz
+pip   install pydot
 
 # Download the source files for the tutorial
 git clone https://github.com/brettin/candle_tutorials
