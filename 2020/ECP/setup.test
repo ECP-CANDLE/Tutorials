@@ -1,0 +1,16 @@
+
+# CANDLE Tutorial Setup Test
+
+import tensorflow as tf
+import h5py
+import keras
+import pandas
+import requests
+
+print('using tensorflow ', tf.__version__)
+print('using h5py ', h5py.__version__)
+print('using keras ', keras.__version__)
+print('using pandas ', pandas.__version__)
+print('using requests ', requests.__version__)
+
+print('OK')

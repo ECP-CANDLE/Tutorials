@@ -1,2 +1,45 @@
 
-WIP
+= CANDLE Hands-on Session: Noise Workflow
+
+
+== Stand-alone test for NT3 
+
+This downloads about 700 MB of data and trains for about 5 minutes on an Intel E5-2650.
+
+----
+$ git clone git@github.com:ECP-CANDLE/Benchmarks.git
+$ git checkout develop
+$ cd Pilot1/NT3
+$ source activate candle
+$ python nt3_baseline_keras2.py --epochs 1
+----
+
+== Supervisor installation
+
+----
+# Install Swift/T, enabling Python module
+# Point Spack to your Anaconda3 install, then:
+$ spack install 'stc^turbine+python'
+# Test Swift/T
+$ spack load stc
+$ swift-t -v
+...
+$ swift-t -E 'trace(42);'
+trace: 42
+$ swift-t -i python -E 'trace(python("x=42","str(x)"));' 
+trace: 42
+# Install Supervisor
+$ git clone git@github.com:ECP-CANDLE/Benchmarks.git
+$ git checkout develop
+----
+
+== Run the workflow
+
+----
+# Checkout the noise branch of Benchmarks
+$ cd .../Benchmarks
+$ git checkout woz-uq-noise
+$ cd .../Supervisor
+$ cd workflows/uq-noise
+$ test/test-1.sh spack -a
+----
