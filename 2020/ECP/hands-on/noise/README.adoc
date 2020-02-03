@@ -29,11 +29,14 @@ trace: 42
 $ swift-t -i python -E 'trace(python("x=42","str(x)"));' 
 trace: 42
 # Install Supervisor
-$ git clone git@github.com:ECP-CANDLE/Benchmarks.git
+$ git clone git@github.com:ECP-CANDLE/Supervisor.git
+$ cd Supervisor
 $ git checkout develop
 ----
 
 == Run the workflow
+
+=== Workstation execution
 
 ----
 # Checkout the noise branch of Benchmarks
@@ -41,5 +44,50 @@ $ cd .../Benchmarks
 $ git checkout woz-uq-noise
 $ cd .../Supervisor
 $ cd workflows/uq-noise
+
 $ test/test-1.sh spack -a
 ----
+
+=== Summit execution
+
+----
+# Install Benchmarks
+$ git clone git@github.com:ECP-CANDLE/Benchmarks.git
+$ mkdir -p Benchmarks/Data/Pilot1
+# Get the data: ~700 MB
+$ cp ~wozniak/Public/data/nt*.csv Benchmarks/Data/Pilot1
+$ cd Benchmarks
+$ git checkout woz-uq-noise
+----
+
+Swift/T is already installed. Supervisor will find it.
+
+----
+# Install Supervisor
+$ git clone git@github.com:ECP-CANDLE/Supervisor.git
+$ cd Supervisor/workflows/uq-noise
+$ git checkout develop
+----
+
+Edit test/cfg-sys-small.sh to set PROJECT if necessary.
+
+Run it!
+----
+$ test/test-1.sh summit -a
+----
+
+A JOB_ID will be reported.
+
+Find the output:
+
+* An experiment directory is created and reported:
++
+----
+TURBINE_OUTPUT=.../experiments/X00N
+----
++
+All output will be in there.
+
+* The main stdout goes to $TURBINE_OUTPUT/output.txt
+* Output from the training runs is diverted to: +
+  $TURBINE_OUTPUT/out/out-*.txt
