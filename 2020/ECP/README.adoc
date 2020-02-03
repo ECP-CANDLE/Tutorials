@@ -3,6 +3,14 @@ ECP Agenda listing:
 
 https://whova.com/embedded/subsession/aecm_202001/799253/801378
 
+== Support
+
+If there are any issues with these instructions, please:
+
+. File an issue in this repo
+. Email woz@anl.gov
+. During the tutorial, just ask!
+
 == Setup
 
 === Install Anaconda for Linux
