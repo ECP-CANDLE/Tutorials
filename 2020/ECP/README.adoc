@@ -74,3 +74,9 @@ $ which python
 $ python setup.test
 ----
 
+
+== Examples
+
+* https://github.com/ECP-CANDLE/Tutorials/tree/master/2020/ECP/hands-on/noise[Noise workflow]
+
+
