@@ -3,10 +3,6 @@ ECP Agenda listing:
 
 https://whova.com/embedded/subsession/aecm_202001/799253/801378
 
-Tutorial plan:
-
-https://docs.google.com/document/d/1hlyTWPC1iRPRmeUxXxgUzmU-kfj0bmxAfBJ69YEnio0
-
 == Setup
 
 === Install Anaconda for Linux
