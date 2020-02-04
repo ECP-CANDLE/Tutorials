@@ -16,6 +16,8 @@ $ python nt3_baseline_keras2.py --epochs 1
 
 == Supervisor installation
 
+Make sure spack is in your PATH.
+
 ----
 # Install Swift/T, enabling Python module
 # Point Spack to your Anaconda3 install, then:
@@ -44,7 +46,7 @@ $ cd .../Benchmarks
 $ git checkout woz-uq-noise
 $ cd .../Supervisor
 $ cd workflows/uq-noise
-
+# Run it!  Using the site "spack"
 $ test/test-1.sh spack -a
 ----
 
