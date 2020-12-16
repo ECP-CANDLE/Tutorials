@@ -69,6 +69,10 @@ $ conda install keras
 $ conda install scikit-learn
 $ conda install requests
 $ conda install matplotlib
+$ conda install numba
+$ conda install statsmodels
+$ conda install patsy
+$ conda install astropy
 
 # Download the source files for the tutorial
 $ git clone https://github.com/ECP-CANDLE/Tutorials.git
